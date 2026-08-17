@@ -10,7 +10,6 @@ import (
 	"io"
 	"log"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -470,8 +469,7 @@ func CreateSaveWithSettings(filePath string, mapGenSettingsFile string, mapSetti
 	}
 
 	args := buildCreateSaveArgs(filePath, mapGenSettingsFile, mapSettingsFile)
-	config := bootstrap.GetConfig()
-	cmdOutput, err := exec.Command(config.FactorioBinary, args...).Output()
+	cmdOutput, err := runFactorio(args...).Output()
 	if err != nil {
 		log.Printf("Error in creating Factorio save: %s", err)
 		log.Println(string(cmdOutput))

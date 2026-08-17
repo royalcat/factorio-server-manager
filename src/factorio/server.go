@@ -12,6 +12,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
+	"runtime"
 	"strconv"
 	"strings"
 	"sync"
@@ -28,6 +29,8 @@ type Server struct {
 	BindIP         string                 `json:"bindip"`
 	Port           int                    `json:"port"`
 	Running        bool                   `json:"running"`
+	Emulated       bool                   `json:"emulated"`  // running Factorio via box64 emulator
+	HostArch       string                 `json:"host_arch"` // runtime.GOARCH of the manager
 	Version        Version                `json:"fac_version"`
 	BaseModVersion string                 `json:"base_mod_version"`
 	Installed      bool                   `json:"installed"`
@@ -83,6 +86,8 @@ func SetFactorioServer(server Server) {
 
 func NewFactorioServer() (err error) {
 	server := Server{}
+	server.Emulated = runtime.GOARCH != "amd64"
+	server.HostArch = runtime.GOARCH
 	server.Settings = make(map[string]interface{})
 	config := bootstrap.GetConfig()
 	if err = os.MkdirAll(config.FactorioConfigDir, 0755); err != nil {
@@ -172,7 +177,7 @@ func NewFactorioServer() (err error) {
 	if config.GlibcCustom == "true" {
 		out, err = exec.Command(config.GlibcLocation, "--library-path", config.GlibcLibLoc, config.FactorioBinary, "--version").Output()
 	} else {
-		out, err = exec.Command(config.FactorioBinary, "--version").Output()
+		out, err = runFactorio("--version").Output()
 	}
 
 	if err != nil {
@@ -304,7 +309,7 @@ func (server *Server) Run() error {
 		server.Cmd = exec.Command(config.GlibcLocation, args...)
 	} else {
 		log.Println("Starting server with command: ", config.FactorioBinary, args)
-		server.Cmd = exec.Command(config.FactorioBinary, args...)
+		server.Cmd = runFactorio(args...)
 	}
 
 	server.StdOut, err = server.Cmd.StdoutPipe()

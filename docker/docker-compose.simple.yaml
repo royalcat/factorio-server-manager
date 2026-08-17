@@ -2,7 +2,6 @@ version: "3"
 services:
   factorio-server-manager:
     image: "ghcr.io/dnaroma/factorio-server-manager:latest"
-    platform: "linux/amd64"
     container_name: "factorio-server-manager"
     restart: "unless-stopped"
     environment:

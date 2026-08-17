@@ -217,7 +217,13 @@ const Controls = ({serverStatus}) => {
         <Panel
             title="Server Status"
             content={
-                <div className="lg:flex">
+                <>
+                    {serverStatus?.emulated &&
+                        <div className="bg-orange text-black rounded-sm px-3 py-2 mb-2 text-sm">
+                            Factorio is running under x86_64 emulation (box64) on {serverStatus.host_arch} — expect reduced performance.
+                        </div>
+                    }
+                    <div className="lg:flex">
                     { serverStatus.running
                         ? <>
                             <div className="lg:w-1/5 mb-2">
@@ -289,7 +295,8 @@ const Controls = ({serverStatus}) => {
                             </div>
                         </>
                     }
-                </div>
+                    </div>
+                </>
             }
             actions={
                 <div className="md:flex">
