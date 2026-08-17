@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/OpenFactorioServerManager/factorio-server-manager/bootstrap"
+	"github.com/OpenFactorioServerManager/factorio-server-manager/src/bootstrap"
 )
 
 func Test2_0(t *testing.T) {

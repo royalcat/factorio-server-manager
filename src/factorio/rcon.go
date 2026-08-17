@@ -4,9 +4,9 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/OpenFactorioServerManager/factorio-server-manager/bootstrap"
+	"github.com/OpenFactorioServerManager/factorio-server-manager/src/bootstrap"
 
-	"github.com/OpenFactorioServerManager/rcon"
+	"github.com/james4k/rcon"
 )
 
 func connectRC() error {

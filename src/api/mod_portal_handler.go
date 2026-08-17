@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/OpenFactorioServerManager/factorio-server-manager/factorio"
+	"github.com/OpenFactorioServerManager/factorio-server-manager/src/factorio"
 	"github.com/gorilla/mux"
 )
 

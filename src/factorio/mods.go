@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/OpenFactorioServerManager/factorio-server-manager/bootstrap"
+	"github.com/OpenFactorioServerManager/factorio-server-manager/src/bootstrap"
 )
 
 type LoginErrorResponse struct {

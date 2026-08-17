@@ -3,7 +3,6 @@ module github.com/OpenFactorioServerManager/factorio-server-manager
 go 1.18
 
 require (
-	github.com/OpenFactorioServerManager/rcon v0.0.0-20120923215419-8fbb8268b60a
 	github.com/glebarez/sqlite v1.10.0
 	github.com/go-ini/ini v1.67.0
 	github.com/gorilla/mux v1.8.0
@@ -11,6 +10,7 @@ require (
 	github.com/gorilla/sessions v1.2.1
 	github.com/gorilla/websocket v1.5.0
 	github.com/hpcloud/tail v1.0.0
+	github.com/james4k/rcon v0.0.0-20120923215419-8fbb8268b60a
 	github.com/jessevdk/go-flags v1.5.0
 	github.com/joho/godotenv v1.5.1
 	github.com/stretchr/testify v1.8.4

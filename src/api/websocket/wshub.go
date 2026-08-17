@@ -3,7 +3,7 @@ package websocket
 import (
 	"reflect"
 
-	"github.com/OpenFactorioServerManager/factorio-server-manager/bootstrap"
+	"github.com/OpenFactorioServerManager/factorio-server-manager/src/bootstrap"
 )
 
 // the hub, that is exported and can be used anywhere to work with the websocket

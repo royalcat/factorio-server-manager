@@ -3,7 +3,7 @@ package api
 import (
 	"testing"
 
-	"github.com/OpenFactorioServerManager/factorio-server-manager/bootstrap"
+	"github.com/OpenFactorioServerManager/factorio-server-manager/src/bootstrap"
 )
 
 func TestInitialAdminCredentialsDefaults(t *testing.T) {

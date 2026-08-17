@@ -10,8 +10,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/OpenFactorioServerManager/factorio-server-manager/bootstrap"
-	"github.com/OpenFactorioServerManager/factorio-server-manager/factorio"
+	"github.com/OpenFactorioServerManager/factorio-server-manager/src/bootstrap"
+	"github.com/OpenFactorioServerManager/factorio-server-manager/src/factorio"
 	"github.com/gorilla/mux"
 )
 

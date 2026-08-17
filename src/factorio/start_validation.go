@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/OpenFactorioServerManager/factorio-server-manager/bootstrap"
+	"github.com/OpenFactorioServerManager/factorio-server-manager/src/bootstrap"
 )
 
 func ValidateServerStart(savefile string) []string {

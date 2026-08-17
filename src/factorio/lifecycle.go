@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/OpenFactorioServerManager/factorio-server-manager/bootstrap"
+	"github.com/OpenFactorioServerManager/factorio-server-manager/src/bootstrap"
 )
 
 type StartupProfile struct {

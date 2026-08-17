@@ -10,9 +10,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/OpenFactorioServerManager/factorio-server-manager/bootstrap"
-	"github.com/OpenFactorioServerManager/factorio-server-manager/factorio"
-	"github.com/OpenFactorioServerManager/factorio-server-manager/lockfile"
+	"github.com/OpenFactorioServerManager/factorio-server-manager/src/bootstrap"
+	"github.com/OpenFactorioServerManager/factorio-server-manager/src/factorio"
+	"github.com/OpenFactorioServerManager/factorio-server-manager/src/lockfile"
 )
 
 func CreateNewMods(w http.ResponseWriter) (modList factorio.Mods, resp interface{}, err error) {

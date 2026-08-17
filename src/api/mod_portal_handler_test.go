@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/OpenFactorioServerManager/factorio-server-manager/factorio"
+	"github.com/OpenFactorioServerManager/factorio-server-manager/src/factorio"
 )
 
 func TestModPortalInstallHandler(t *testing.T) {

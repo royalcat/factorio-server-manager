@@ -14,7 +14,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/OpenFactorioServerManager/factorio-server-manager/lockfile"
+	"github.com/OpenFactorioServerManager/factorio-server-manager/src/lockfile"
 )
 
 type Mods struct {

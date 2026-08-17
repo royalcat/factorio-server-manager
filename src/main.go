@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/OpenFactorioServerManager/factorio-server-manager/api"
-	"github.com/OpenFactorioServerManager/factorio-server-manager/bootstrap"
-	"github.com/OpenFactorioServerManager/factorio-server-manager/factorio"
+	"github.com/OpenFactorioServerManager/factorio-server-manager/src/api"
+	"github.com/OpenFactorioServerManager/factorio-server-manager/src/bootstrap"
+	"github.com/OpenFactorioServerManager/factorio-server-manager/src/factorio"
 )
 
 func main() {

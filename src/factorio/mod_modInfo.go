@@ -10,7 +10,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/OpenFactorioServerManager/factorio-server-manager/lockfile"
+	"github.com/OpenFactorioServerManager/factorio-server-manager/src/lockfile"
 )
 
 type ModInfoList struct {

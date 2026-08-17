@@ -3,7 +3,7 @@ package factorio
 import (
 	"log"
 
-	"github.com/OpenFactorioServerManager/factorio-server-manager/bootstrap"
+	"github.com/OpenFactorioServerManager/factorio-server-manager/src/bootstrap"
 	"github.com/hpcloud/tail"
 )
 

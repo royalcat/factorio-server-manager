@@ -16,7 +16,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/OpenFactorioServerManager/factorio-server-manager/bootstrap"
+	"github.com/OpenFactorioServerManager/factorio-server-manager/src/bootstrap"
 )
 
 const saveBackupDirName = "backups"

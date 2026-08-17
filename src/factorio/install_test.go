@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/OpenFactorioServerManager/factorio-server-manager/bootstrap"
+	"github.com/OpenFactorioServerManager/factorio-server-manager/src/bootstrap"
 )
 
 func TestHasUpdateUsesCurrentChannel(t *testing.T) {

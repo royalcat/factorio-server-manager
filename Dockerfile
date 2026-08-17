@@ -11,16 +11,18 @@ COPY ui/ ui/
 RUN pnpm run build
 
 # ---- Backend build ----
-FROM golang:1.26.4 AS backend
-WORKDIR /src
-COPY src/go.mod src/go.sum ./
-RUN go mod download
-COPY src/ ./
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /out/factorio-server-manager .
+FROM golang:1.26 AS backend
+WORKDIR /build
+COPY go.mod go.sum ./
+RUN --mount=type=cache,target=/go/pkg/mod go mod download
+COPY src/ ./src
+RUN --mount=type=cache,target=/root/.cache/go-build \
+    --mount=type=cache,target=/go/pkg/mod \
+    CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /out/factorio-server-manager ./src/main.go
 
 # ---- Runtime ----
 # Glibc is required for Factorio Server binaries to run.
-FROM debian:bookworm-slim
+FROM debian:trixie-slim
 ENV RCON_PASS="" \
     FSM_ADMIN_USERNAME=admin
 
