@@ -83,17 +83,26 @@ These backups are on the same Docker volume as the saves. Back up `./factorio-da
 Authentication is supported in the application, but it is recommended to ensure access to the Factorio manager UI is accessible via VPN or internal network.
 
 ## Development
-For development purposes it also has the ability to create the docker image from local sourcecode. This is done by running `build.sh` in the `docker` directory. This will delete all old executables and the node_modules directory (runs `make build`). The created docker image will have the tag `factorio-server-manager:dev`.
 
-### Creating release bundles
-A Dockerfile-build file is included for creating the release bundles. Use Docker version 20 in order to use the BUILDKIT environment, some issues have been encountered with Docker version 19.
+Build the container image directly from source, no host toolchain required:
 
-To create the bundle build the Dockerfile-build file with the following command. The release bundles are output to the ./dist directory.
-
-Run this command from the root factorio-server-manager directory.
+```sh
+docker build -t factorio-server-manager:dev .
 ```
-DOCKER_BUILDKIT=1 docker build --no-cache -f docker/Dockerfile-build -t ofsm-build --target=build -o dist .
+
+The multistage `Dockerfile` at the repository root compiles the frontend, cross-compiles the Go backend, and assembles a runtime image in one command.
+
+To build and push for a release:
+
+```sh
+docker buildx build \
+  --platform linux/amd64 \
+  --tag ghcr.io/dnaroma/factorio-server-manager:latest \
+  --push \
+  .
 ```
+
+Release bundles (zip) for non-Docker installs are produced with `make build` from the repository root.
 
 ## For everyone who actually read this thing to the end
 

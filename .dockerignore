@@ -1,0 +1,43 @@
+# VCS
+.git
+.gitignore
+
+# CI
+.github
+
+# Built artifacts (rebuilt inside the image)
+app
+build
+node_modules
+pkg
+factorio-server-manager
+factorio-server-manager-*
+
+# Compressed release bundles
+*.zip
+
+# Local runtime state / secrets
+conf.json
+.env
+*.db
+*.leveldb
+auth.leveldb*
+
+# Local development data
+dev
+dev_packs
+
+# Docker compose runtime data volumes
+docker/fsm-data
+docker/factorio-data
+docker/traefik-data
+
+# Docs, screenshots, IDE
+docs
+screenshots
+.idea
+.vscode
+*.md
+
+# Devcontainer
+.devcontainer

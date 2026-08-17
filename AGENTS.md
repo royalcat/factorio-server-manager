@@ -4,7 +4,7 @@
 - Factorio Server Manager is a Go backend with a React/Vite frontend.
 - Backend code lives in `src/`; the Go module root is `src/go.mod`.
 - Frontend source lives in `ui/`; built assets are emitted into `app/`.
-- Docker and release packaging live under `docker/` and the root `Makefile`.
+- Docker deployment config lives in `docker/`; the root `Dockerfile` is a multistage build that produces the container image. Release packaging uses the root `Makefile`.
 
 ## Common Commands
 - Install project tools: `mise install`

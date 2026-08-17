@@ -5,7 +5,7 @@
 - `src/`: Go backend module.
 - `ui/`: React/Vite frontend source.
 - `app/`: generated frontend bundle served by the backend.
-- `docker/`: Dockerfiles, compose files, and release image helpers.
+- `docker/`: Compose files, entrypoint, and deployment helpers. The root `Dockerfile` is a multistage build that produces the container image from source.
 - `conf.json.example`: default local configuration fixture.
 
 ## Tooling
