@@ -15,14 +15,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dnaroma/factorio-server-manager.git"
+    "url": "git+https://github.com/royalcat/factorio-server-manager.git"
   },
   "author": "Mitch Roote <mitch@r00t.ca>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/dnaroma/factorio-server-manager/issues"
+    "url": "https://github.com/royalcat/factorio-server-manager/issues"
   },
-  "homepage": "https://github.com/dnaroma/factorio-server-manager#readme",
+  "homepage": "https://github.com/royalcat/factorio-server-manager#readme",
   "devDependencies": {
     "@vitejs/plugin-react": "^6.0.5",
     "autoprefixer": "^10.5.4",

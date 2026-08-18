@@ -8,7 +8,7 @@ Deploy with one of these paths:
 - Docker Compose without HTTPS: `docker/docker-compose.simple.yaml`.
 - Release bundle from `make build`.
 
-The compose files use the GHCR image `ghcr.io/dnaroma/factorio-server-manager:latest`.
+The compose files use the GHCR image `ghcr.io/royalcat/factorio-server-manager:latest`.
 
 ## Docker Compose
 
@@ -98,8 +98,4 @@ The output zip is written under `build/`. It contains the backend binary, genera
 
 ## Release Automation
 
-Publishing a GitHub release triggers `.github/workflows/create-release-workflow.yml`, which:
-
-- builds the Linux release zip,
-- uploads them to the GitHub release,
-- builds and pushes GHCR Docker images with `GITHUB_TOKEN`.
+Pushing to `develop` or tagging a release triggers `.github/workflows/build-docker.yaml`, which builds and pushes the multi-arch GHCR Docker images (`ghcr.io/royalcat/factorio-server-manager`) with `GITHUB_TOKEN`.

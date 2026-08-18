@@ -97,7 +97,7 @@ To build and push for a release:
 ```sh
 docker buildx build \
   --platform linux/amd64 \
-  --tag ghcr.io/dnaroma/factorio-server-manager:latest \
+  --tag ghcr.io/royalcat/factorio-server-manager:latest \
   --push \
   .
 ```
