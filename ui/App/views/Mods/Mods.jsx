@@ -8,10 +8,10 @@ import Tab from "../../components/Tabs/Tab";
 import AddMod from "./components/AddMod/AddMod";
 import UploadMod from "./components/UploadMod";
 import LoadMods from "./components/LoadMods";
-import Fuse from "fuse.js";
 import CreateModPack from "./components/CreateModPack";
 import ModPack from "./components/ModPack";
 import ModList from "./components/ModList";
+import SearchMods from "./components/SearchMods/SearchMods";
 import ImportModPack from "./components/ImportModPack";
 import {coerce, gt, satisfies} from "semver";
 import {formatFactorioVersion, formatFactorioVersionShort, formatModVersion} from "../../utils/version";
@@ -138,7 +138,6 @@ const Mods = ({serverStatus}) => {
     const [installedMods, setInstalledMods] = useState([]);
     const [modPacks, setModPacks] = useState([])
     const [factorioVersion, setFactorioVersion] = useState(null);
-    const [fuse, setFuse] = useState(undefined);
     const [isDeletingAllMods, setIsDeletingAllMods] = useState(false);
     const [isUpdatingMods, setIsUpdatingMods] = useState(false);
     const [portalInfo, setPortalInfo] = useState({});
@@ -208,26 +207,7 @@ const Mods = ({serverStatus}) => {
                 setFactorioVersion(data.base_mod_version)
                 fetchInstalledMods();
                 fetchModPacks();
-            })
-
-        // fetch list of mods
-        modsResource.portal.list()
-            .then(res => {
-                setFuse(new Fuse(res.results, {
-                    keys: [
-                        {
-                            "name": "name",
-                            weight: 2
-                        },
-                        {
-                            "name": "title",
-                            weight: 1
-                        }
-                    ],
-                    minMatchCharLength: 3
-                }));
             });
-
     }, []);
 
     useEffect(() => {
@@ -300,7 +280,10 @@ const Mods = ({serverStatus}) => {
                 :
                 <TabControl>
                     <Tab title="Install Mod">
-                        <AddMod refetchInstalledMods={fetchInstalledMods} fuse={fuse}/>
+                        <AddMod refetchInstalledMods={fetchInstalledMods}/>
+                    </Tab>
+                    <Tab title="Search">
+                        <SearchMods factorioVersion={factorioVersion} refetchInstalledMods={fetchInstalledMods}/>
                     </Tab>
                     <Tab title="Upload Mod">
                         <UploadMod refetchInstalledMods={fetchInstalledMods}/>

@@ -9,6 +9,32 @@ import (
 	"github.com/gorilla/mux"
 )
 
+func ModPortalSearchModsHandler(w http.ResponseWriter, r *http.Request) {
+	var err error
+	var resp interface{}
+
+	defer func() {
+		WriteResponse(w, resp)
+	}()
+
+	w.Header().Set("Content-Type", "application/json;charset=UTF-8")
+
+	query := r.URL.Query().Get("query")
+	version := r.URL.Query().Get("version")
+
+	var statusCode int
+	resp, err, statusCode = factorio.ModPortalSearch(query, version)
+
+	if err != nil {
+		resp = fmt.Sprintf("Error in searching mods from mod portal: %s", err)
+		log.Println(resp)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(statusCode)
+}
+
 func ModPortalListModsHandler(w http.ResponseWriter, r *http.Request) {
 	var err error
 	var resp interface{}

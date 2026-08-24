@@ -1,6 +1,7 @@
 package factorio
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"io/ioutil"
@@ -30,6 +31,55 @@ type ModPortalStruct struct {
 	} `json:"releases"`
 	Summary string `json:"summary"`
 	Title   string `json:"title"`
+}
+
+type ModPortalSearchRequest struct {
+	Query    string `json:"query,omitempty"`
+	Version  string `json:"version,omitempty"`
+	PageSize int    `json:"page_size"`
+	Page     int    `json:"page"`
+}
+
+func ModPortalSearch(query string, version string) (interface{}, error, int) {
+	reqBody := ModPortalSearchRequest{
+		Query:    query,
+		Version:  version,
+		PageSize: 20,
+		Page:     1,
+	}
+	jsonBody, err := json.Marshal(reqBody)
+	if err != nil {
+		return nil, err, http.StatusInternalServerError
+	}
+
+	req, err := http.NewRequest(http.MethodPost, modPortalBaseURL+"/api/search", bytes.NewBuffer(jsonBody))
+	if err != nil {
+		return "error", err, http.StatusInternalServerError
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return "error", err, http.StatusInternalServerError
+	}
+	defer resp.Body.Close()
+
+	text, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "error", err, http.StatusInternalServerError
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, errors.New(string(text)), resp.StatusCode
+	}
+
+	var jsonVal interface{}
+	err = json.Unmarshal(text, &jsonVal)
+	if err != nil {
+		return "error", err, http.StatusInternalServerError
+	}
+
+	return jsonVal, nil, resp.StatusCode
 }
 
 // get all mods uploaded to the factorio modPortal

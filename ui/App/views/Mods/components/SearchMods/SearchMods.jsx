@@ -1,12 +1,9 @@
 import React, {useEffect, useState} from "react";
-import AddModForm from "./components/AddModForm";
-import FactorioLogin from "./components/FactorioLogin";
+import SearchModsForm from "./SearchModsForm";
+import FactorioLogin from "../AddMod/components/FactorioLogin";
 import modResource from "../../../../../api/resources/mods";
 
-
-
-const AddMod = ({refetchInstalledMods}) => {
-
+const SearchMods = ({refetchInstalledMods, factorioVersion}) => {
     const [isFactorioAuthenticated, setIsFactorioAuthenticated] = useState(false);
 
     useEffect(() => {
@@ -16,8 +13,8 @@ const AddMod = ({refetchInstalledMods}) => {
     }, []);
 
     return isFactorioAuthenticated
-        ? <AddModForm setIsFactorioAuthenticated={setIsFactorioAuthenticated} refetchInstalledMods={refetchInstalledMods}/>
+        ? <SearchModsForm setIsFactorioAuthenticated={setIsFactorioAuthenticated} refetchInstalledMods={refetchInstalledMods} factorioVersion={factorioVersion} />
         : <FactorioLogin setIsFactorioAuthenticated={setIsFactorioAuthenticated}/>
 }
 
-export default AddMod;
+export default SearchMods;

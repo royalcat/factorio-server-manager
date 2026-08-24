@@ -65,6 +65,15 @@ const mods = {
         info: async mod => {
             const response = await client.get(`/api/mods/portal/info/${mod}`);
             return response.data;
+        },
+        search: async (query, version) => {
+            const response = await client.get('/api/mods/portal/search', {
+                params: {
+                    query,
+                    version
+                }
+            });
+            return response.data;
         }
     },
     packs: {

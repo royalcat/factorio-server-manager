@@ -355,6 +355,12 @@ var apiRoutes = Routes{
 		ModPortalListModsHandler,
 		false,
 	}, {
+		"ModPortalSearchMods",
+		"GET",
+		"/mods/portal/search",
+		ModPortalSearchModsHandler,
+		false,
+	}, {
 		"ModPortalGetModInfo",
 		"GET",
 		"/mods/portal/info/{mod}",
