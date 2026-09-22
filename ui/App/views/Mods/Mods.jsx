@@ -13,12 +13,12 @@ import ModPack from "./components/ModPack";
 import ModList from "./components/ModList";
 import SearchMods from "./components/SearchMods/SearchMods";
 import ImportModPack from "./components/ImportModPack";
-import {coerce, gt, satisfies} from "semver";
-import {formatFactorioVersion, formatFactorioVersionShort, formatModVersion} from "../../utils/version";
+import {gt, satisfies} from "semver";
+import {formatFactorioVersion, formatFactorioVersionShort, formatModVersion, parseVersion} from "../../utils/version";
 
-const releaseVersion = release => coerce(release.version);
-const modVersion = mod => coerce(mod.version);
-const factorioReleaseVersion = release => coerce(release.info_json.factorio_version);
+const releaseVersion = release => parseVersion(release.version);
+const modVersion = mod => parseVersion(mod.version);
+const factorioReleaseVersion = release => parseVersion(release.info_json.factorio_version);
 const builtInMods = ["base", "elevated-rails", "quality", "space-age"];
 
 const requiredDependencyName = dependency => {
@@ -48,7 +48,7 @@ const requiredDependencyNames = dependencies => (dependencies || [])
 
 const isReleaseCompatible = (release, factorioVersion) => {
     const requiredFactorioVersion = factorioReleaseVersion(release);
-    const installedFactorioVersion = coerce(factorioVersion);
+    const installedFactorioVersion = parseVersion(factorioVersion);
     if (!requiredFactorioVersion || !installedFactorioVersion) {
         return false;
     }
