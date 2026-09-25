@@ -469,7 +469,7 @@ func CreateSaveWithSettings(filePath string, mapGenSettingsFile string, mapSetti
 	}
 
 	args := buildCreateSaveArgs(filePath, mapGenSettingsFile, mapSettingsFile)
-	cmdOutput, err := runFactorio(args...).Output()
+	cmdOutput, err := runFactorio(GetFactorioServer().Version, args...).Output()
 	if err != nil {
 		log.Printf("Error in creating Factorio save: %s", err)
 		log.Println(string(cmdOutput))

@@ -8,7 +8,9 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"regexp"
+	"runtime"
 	"strings"
 	"sync"
 	"time"
@@ -39,9 +41,38 @@ type InstallStatus struct {
 }
 
 func IsFactorioInstalled() bool {
-	config := bootstrap.GetConfig()
-	info, err := os.Stat(config.FactorioBinary)
+	info, err := os.Stat(factorioBinaryPath(installedFactorioVersion()))
 	return err == nil && !info.IsDir()
+}
+
+// installedFactorioVersion returns the version reported by the installed
+// Factorio base mod, or NilVersion when it cannot be determined.
+func installedFactorioVersion() Version {
+	config := bootstrap.GetConfig()
+	data, err := os.ReadFile(filepath.Join(config.FactorioBaseModDir, "info.json"))
+	if err != nil {
+		return NilVersion
+	}
+	var modInfo ModInfo
+	if err := json.Unmarshal(data, &modInfo); err != nil {
+		return NilVersion
+	}
+	var version Version
+	if err := version.UnmarshalText([]byte(modInfo.Version)); err != nil {
+		return NilVersion
+	}
+	return version
+}
+
+// factorioDownloadPlatform returns the platform segment of the Factorio
+// headless download URL for the given GOARCH and version. Official
+// linux-arm64 builds exist since 2.1.18; older versions and other
+// architectures fall back to the x86_64 linux64 build under box64.
+func factorioDownloadPlatform(goarch string, version Version) string {
+	if goarch == "arm64" && hasNativeARMBuild(version) {
+		return "linux-arm64"
+	}
+	return "linux64"
 }
 
 func GetInstallStatus() InstallStatus {
@@ -104,7 +135,12 @@ func InstallFactorio(version string) error {
 		return fmt.Errorf("create Factorio directory: %w", err)
 	}
 
-	url := fmt.Sprintf("https://www.factorio.com/get-download/%s/headless/linux64", resolvedVersion)
+	resolved := NilVersion
+	if err := resolved.UnmarshalText([]byte(resolvedVersion)); err != nil {
+		resolved = NilVersion
+	}
+	platform := factorioDownloadPlatform(runtime.GOARCH, resolved)
+	url := fmt.Sprintf("https://www.factorio.com/get-download/%s/headless/%s", resolvedVersion, platform)
 	updateInstallState("downloading", resolvedVersion, "Downloading Factorio server archive", 0, 0)
 	resp, err := http.Get(url)
 	if err != nil {

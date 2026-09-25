@@ -86,7 +86,6 @@ func SetFactorioServer(server Server) {
 
 func NewFactorioServer() (err error) {
 	server := Server{}
-	server.Emulated = runtime.GOARCH != "amd64"
 	server.HostArch = runtime.GOARCH
 	server.Settings = make(map[string]interface{})
 	config := bootstrap.GetConfig()
@@ -172,27 +171,6 @@ func NewFactorioServer() (err error) {
 
 	log.Printf("Loaded Factorio settings from %s\n", settingsPath)
 
-	out := []byte{}
-	//Load factorio version
-	if config.GlibcCustom == "true" {
-		out, err = exec.Command(config.GlibcLocation, "--library-path", config.GlibcLibLoc, config.FactorioBinary, "--version").Output()
-	} else {
-		out, err = runFactorio("--version").Output()
-	}
-
-	if err != nil {
-		log.Printf("error on loading factorio version: %s", err)
-		return
-	}
-
-	reg := regexp.MustCompile("Version.*?((\\d+\\.)?(\\d+\\.)?(\\*|\\d+)+)")
-	found := reg.FindStringSubmatch(string(out))
-	err = server.Version.UnmarshalText([]byte(found[1]))
-	if err != nil {
-		log.Printf("could not parse version: %v", err)
-		return
-	}
-
 	//Load baseMod version
 	baseModInfoFile := filepath.Join(config.FactorioBaseModDir, "info.json")
 	bmifBa, err := ioutil.ReadFile(baseModInfoFile)
@@ -208,6 +186,36 @@ func NewFactorioServer() (err error) {
 	}
 
 	server.BaseModVersion = modInfo.Version
+
+	// The installed version has to be known before Factorio is executed to
+	// decide whether the native arm64 binary or the box64 emulator is used.
+	installedVersion := NilVersion
+	if err := installedVersion.UnmarshalText([]byte(modInfo.Version)); err != nil {
+		log.Printf("could not parse Factorio version from %s: %v", baseModInfoFile, err)
+	}
+	server.Emulated = needsEmulationFor(runtime.GOARCH, installedVersion)
+	binaryPath := factorioBinaryPath(installedVersion)
+
+	out := []byte{}
+	//Load factorio version
+	if config.GlibcCustom == "true" {
+		out, err = exec.Command(config.GlibcLocation, "--library-path", config.GlibcLibLoc, binaryPath, "--version").Output()
+	} else {
+		out, err = runFactorio(installedVersion, "--version").Output()
+	}
+
+	if err != nil {
+		log.Printf("error on loading factorio version: %s", err)
+		return
+	}
+
+	reg := regexp.MustCompile("Version.*?((\\d+\\.)?(\\d+\\.)?(\\*|\\d+)+)")
+	found := reg.FindStringSubmatch(string(out))
+	err = server.Version.UnmarshalText([]byte(found[1]))
+	if err != nil {
+		log.Printf("could not parse version: %v", err)
+		return
+	}
 
 	// load admins from additional file
 	if (server.Version.Greater(Version{0, 17, 0})) {
@@ -274,12 +282,13 @@ func (server *Server) Run() error {
 	}
 
 	args := []string{}
+	binaryPath := factorioBinaryPath(server.Version)
 
 	//The factorio server refenences its executable-path, since we execute the ld.so file and pass the factorio binary as a parameter
 	//the game would use the path to the ld.so file as it's executable path and crash, to prevent this the parameter "--executable-path" is added
 	if config.GlibcCustom == "true" {
 		log.Println("Custom glibc selected, glibc.so location:", config.GlibcLocation, " lib location:", config.GlibcLibLoc)
-		args = append(args, "--library-path", config.GlibcLibLoc, config.FactorioBinary, "--executable-path", config.FactorioBinary)
+		args = append(args, "--library-path", config.GlibcLibLoc, binaryPath, "--executable-path", binaryPath)
 	}
 
 	args = append(args,
@@ -308,8 +317,8 @@ func (server *Server) Run() error {
 		log.Println("Starting server with command: ", config.GlibcLocation, args)
 		server.Cmd = exec.Command(config.GlibcLocation, args...)
 	} else {
-		log.Println("Starting server with command: ", config.FactorioBinary, args)
-		server.Cmd = runFactorio(args...)
+		log.Println("Starting server with command: ", binaryPath, args)
+		server.Cmd = runFactorio(server.Version, args...)
 	}
 
 	server.StdOut, err = server.Cmd.StdoutPipe()

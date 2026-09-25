@@ -35,7 +35,9 @@ EXPOSE 80/tcp 34197/udp
 # tar + xz-utils extract the Factorio archive (tar -xJf); jq is used by the
 # entrypoint to seed conf.json; ca-certificates is required for Factorio
 # downloads over HTTPS. On non-amd64 hosts, box64 and multiarch amd64 libc are
-# installed so the x86_64-only Factorio server binary can run under emulation.
+# installed so x86_64 Factorio builds can run under emulation: arm64 uses the
+# native Factorio binary for 2.1.18+ releases and box64 for older ones, RISC-V
+# always uses box64.
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates tar xz-utils jq \
     && if [ "$TARGETARCH" != "amd64" ]; then \

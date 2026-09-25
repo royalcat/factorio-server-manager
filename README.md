@@ -10,7 +10,7 @@ This tool runs on a Factorio server and allows management of the Factorio server
 > This is a fork of [OpenFactorioServerManager/factorio-server-manager](https://github.com/OpenFactorioServerManager/factorio-server-manager) based on another fork [dnaroma/factorio-server-manager](https://github.com/dnaroma/factorio-server-manager).
 >
 > **Added by this fork**
-> - ARM64 & RISC-V support via box64 emulation
+> - Native ARM64 support for Factorio 2.1.18+, box64 emulation for older releases and RISC-V
 > - Proper docker image build pipeline
 >
 > **Added by the dnaroma fork**
