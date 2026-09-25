@@ -440,6 +440,18 @@ var apiRoutes = Routes{
 		"/mods/download",
 		ModDownloadHandler,
 		false,
+	}, {
+		"GetModSettings",
+		"GET",
+		"/mods/settings",
+		GetModSettingsHandler,
+		true,
+	}, {
+		"UpdateModSettings",
+		"POST",
+		"/mods/settings/update",
+		UpdateModSettingsHandler,
+		true,
 	},
 	// Mod Packs
 	{

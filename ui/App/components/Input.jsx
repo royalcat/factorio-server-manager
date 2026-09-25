@@ -13,6 +13,7 @@ const Input = ({
                    list = undefined,
                    min = undefined,
                    max = undefined,
+                   step = undefined,
                    value = undefined,
                    disabled = false
                }) => {
@@ -31,6 +32,7 @@ const Input = ({
             defaultValue={defaultValue}
             min={min}
             max={max}
+            step={step}
             value={value}
             disabled={disabled}
         />
