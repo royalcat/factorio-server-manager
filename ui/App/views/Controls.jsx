@@ -9,7 +9,7 @@ import Input from "../components/Input";
 import Error from "../components/Error";
 import {formatFactorioVersion} from "../utils/version";
 
-const Controls = ({serverStatus}) => {
+const Controls = ({serverStatus, refreshStatus}) => {
 
     const factorioVersion = formatFactorioVersion(serverStatus.fac_version);
     const [saves, setSaves] = useState([]);
@@ -48,6 +48,7 @@ const Controls = ({serverStatus}) => {
         setStartError('');
         try {
             await server.start(data.ip, parseInt(data.port), data.save);
+            await refreshStatus?.();
         } catch (error) {
             const message = error?.response?.data || error.message;
             setStartError(message);
@@ -59,12 +60,22 @@ const Controls = ({serverStatus}) => {
 
     const stopServer = async () => {
         setIsStopping(true);
-        await server.stop();
+        try {
+            await server.stop();
+            await refreshStatus?.();
+        } finally {
+            setIsStopping(false);
+        }
     }
 
     const killServer = async () => {
         setIsKilling(true);
-        await server.kill();
+        try {
+            await server.kill();
+            await refreshStatus?.();
+        } finally {
+            setIsKilling(false);
+        }
     }
 
     const installFactorio = async () => {

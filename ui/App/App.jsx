@@ -38,6 +38,11 @@ const App = () => {
         }
     },[]);
 
+    const refreshStatus = useCallback(async () => {
+        const status = await server.status();
+        setServerStatus(status);
+    }, []);
+
     const handleLogout = useCallback(async () => {
         const loggedOut = await user.logout();
         if (loggedOut) {
@@ -60,7 +65,7 @@ const App = () => {
                 {/* route with only `element` will cause the proper children to be place in `<Outlet/>` */}
                 <Route element={<ProtectedRoute isAuthenticated={isAuthenticated}/> }>
                     <Route element={<Layout handleLogout={handleLogout} serverStatus={serverStatus} />}>
-                        <Route index element={<Controls serverStatus={serverStatus}/>}/>
+                        <Route index element={<Controls serverStatus={serverStatus} refreshStatus={refreshStatus}/>}/>
                         <Route path="saves" element={<Saves serverStatus={serverStatus}/>}/>
                         <Route path="mods" element={<Mods serverStatus={serverStatus}/>}/>
                         <Route path="server-settings" element={<ServerSettings serverStatus={serverStatus}/>}/>
