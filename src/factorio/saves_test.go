@@ -8,6 +8,9 @@ import (
 	"reflect"
 	"strings"
 	"testing"
+	"time"
+
+	"github.com/OpenFactorioServerManager/factorio-server-manager/src/bootstrap"
 )
 
 func TestFreshRestartSaveNamingPattern(t *testing.T) {
@@ -224,4 +227,48 @@ func TestPruneSaveBackupsBoundsCheck(t *testing.T) {
 		return
 	}
 	t.Fatal("should not reach pruning code with only 2 backups and retention 5")
+}
+
+func TestListSavesSortedByLastModNewestFirst(t *testing.T) {
+	dir := t.TempDir()
+	conf := filepath.Join(t.TempDir(), "conf.json")
+	if err := os.WriteFile(conf, []byte(`{"settings_file":"server-settings.json"}`), 0644); err != nil {
+		t.Fatalf("Error writing config: %s", err)
+	}
+	bootstrap.NewConfig([]string{"--dir", dir, "--conf", conf})
+
+	savesDir := filepath.Join(dir, "saves")
+	if err := os.MkdirAll(savesDir, 0755); err != nil {
+		t.Fatalf("Error creating saves dir: %s", err)
+	}
+
+	// Names are intentionally out of chronological order.
+	mtimes := map[string]time.Time{
+		"b.zip": time.Date(2026, 1, 3, 12, 0, 0, 0, time.UTC),
+		"a.zip": time.Date(2026, 1, 2, 12, 0, 0, 0, time.UTC),
+		"c.zip": time.Date(2026, 1, 1, 12, 0, 0, 0, time.UTC),
+	}
+	for name, mtime := range mtimes {
+		path := filepath.Join(savesDir, name)
+		if err := os.WriteFile(path, []byte("save-data"), 0644); err != nil {
+			t.Fatalf("Error writing save %s: %s", name, err)
+		}
+		if err := os.Chtimes(path, mtime, mtime); err != nil {
+			t.Fatalf("Error setting mtime for %s: %s", name, err)
+		}
+	}
+
+	saves, err := ListSaves()
+	if err != nil {
+		t.Fatalf("Error listing saves: %s", err)
+	}
+
+	names := make([]string, 0, len(saves))
+	for _, save := range saves {
+		names = append(names, save.Name)
+	}
+	expected := []string{"b.zip", "a.zip", "c.zip"}
+	if !reflect.DeepEqual(names, expected) {
+		t.Fatalf("expected saves sorted newest first %v, got %v", expected, names)
+	}
 }

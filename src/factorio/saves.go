@@ -241,6 +241,10 @@ func ListSaves() (saves []Save, err error) {
 		})
 	}
 
+	sort.Slice(saves, func(i, j int) bool {
+		return saves[i].LastMod.After(saves[j].LastMod)
+	})
+
 	return saves, nil
 }
 
