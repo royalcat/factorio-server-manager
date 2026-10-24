@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+### Fixed
+- Factorio 2.1's bundled `recycler` mod is no longer reported as a missing dependency
+- Bundled mods are now also detected from the installed Factorio `data/` directory, so built-in mods added in future Factorio versions need no code change
+
 ## [0.2.6] - 2026-06-28
 ### Added
 - Fresh Restart feature on the Saves page: creates a new save with identical map generation settings (seed, terrain, resources) but zero progress

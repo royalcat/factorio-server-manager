@@ -8,7 +8,7 @@ import modResource from "../../../../api/resources/mods";
 import FactorioLogin from "./AddMod/components/FactorioLogin";
 import ConfirmDialog from "../../../components/ConfirmDialog";
 
-const builtInMods = ["base", "elevated-rails", "quality", "space-age"];
+const builtInMods = ["base", "elevated-rails", "quality", "recycler", "space-age"];
 
 const LoadMods = ({refreshMods}) => {
 

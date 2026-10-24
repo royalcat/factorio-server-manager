@@ -14,6 +14,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/OpenFactorioServerManager/factorio-server-manager/src/bootstrap"
 	"github.com/OpenFactorioServerManager/factorio-server-manager/src/lockfile"
 )
 
@@ -237,12 +238,45 @@ var builtInMods = map[string]struct{}{
 	"base":           {},
 	"elevated-rails": {},
 	"quality":        {},
+	"recycler":       {},
 	"space-age":      {},
 }
 
+// IsBuiltInMod reports whether a mod ships with Factorio. Bundled mods have no
+// zip file in the mods directory, so dependencies on them are always satisfied.
 func IsBuiltInMod(modName string) bool {
-	_, ok := builtInMods[modName]
-	return ok
+	if _, ok := builtInMods[modName]; ok {
+		return true
+	}
+
+	return isBundledMod(modName)
+}
+
+// bundledModDir returns the directory that holds Factorio's bundled mods,
+// derived from the configured base mod directory.
+func bundledModDir() string {
+	config := bootstrap.GetConfig()
+	if config.FactorioBaseModDir == "" {
+		return ""
+	}
+
+	return filepath.Dir(config.FactorioBaseModDir)
+}
+
+// isBundledMod checks the installed Factorio data directory, so bundled mods
+// added in future Factorio versions are recognized without updating builtInMods.
+func isBundledMod(modName string) bool {
+	if modName == "" || modName == "." || modName == ".." || filepath.Base(modName) != modName {
+		return false
+	}
+
+	dataDir := bundledModDir()
+	if dataDir == "" {
+		return false
+	}
+
+	info, err := os.Stat(filepath.Join(dataDir, modName, "info.json"))
+	return err == nil && !info.IsDir()
 }
 
 var modPrefixes = []string{"!", "?", "+", "(?)", "~"}

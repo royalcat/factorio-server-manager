@@ -20,7 +20,7 @@ import {formatFactorioVersion, formatFactorioVersionShort, formatModVersion, par
 const releaseVersion = release => parseVersion(release.version);
 const modVersion = mod => parseVersion(mod.version);
 const factorioReleaseVersion = release => parseVersion(release.info_json.factorio_version);
-const builtInMods = ["base", "elevated-rails", "quality", "space-age"];
+const builtInMods = ["base", "elevated-rails", "quality", "recycler", "space-age"];
 
 const requiredDependencyName = dependency => {
     const normalized = dependency.trim();

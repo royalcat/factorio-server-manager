@@ -1,6 +1,7 @@
 package factorio
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -86,6 +87,7 @@ func TestRequiredDependencyNamesSkipsBuiltInMods(t *testing.T) {
 		"space-age",
 		"quality >= 2.0.0",
 		"elevated-rails >= 2.0.0",
+		"recycler >= 2.1.0",
 		"required-mod >= 1.0.0",
 		"? optional-mod >= 1.0.0",
 	}
@@ -94,6 +96,41 @@ func TestRequiredDependencyNamesSkipsBuiltInMods(t *testing.T) {
 	expected := []string{"required-mod"}
 	if !reflect.DeepEqual(expected, actual) {
 		t.Fatalf("Expected required dependencies %v, got %v", expected, actual)
+	}
+}
+
+func TestIsBuiltInModDetectsBundledModsFromDataDir(t *testing.T) {
+	dir := t.TempDir()
+	conf := filepath.Join(t.TempDir(), "conf.json")
+	confContent := fmt.Sprintf(
+		`{"rcon_pass":"test-rcon","cookie_encryption_key":"VGhpcy1pcy1hLXRlc3QtMzItYnl0ZS1rZXkh","settings_file":"server-settings.json","basemod_dir":%q}`,
+		filepath.Join(dir, "data", "base"),
+	)
+	if err := os.WriteFile(conf, []byte(confContent), 0644); err != nil {
+		t.Fatalf("Error writing config: %s", err)
+	}
+	bootstrap.NewConfig([]string{"--dir", dir, "--conf", conf})
+
+	// bundled mods shipped with Factorio are known even without a static entry
+	bundledDir := filepath.Join(dir, "data", "future-mod")
+	if err := os.MkdirAll(bundledDir, 0755); err != nil {
+		t.Fatalf("Error creating bundled mod dir: %s", err)
+	}
+	if err := os.WriteFile(filepath.Join(bundledDir, "info.json"), []byte(`{"name":"future-mod"}`), 0644); err != nil {
+		t.Fatalf("Error writing bundled mod info: %s", err)
+	}
+
+	if !IsBuiltInMod("recycler") {
+		t.Fatal("Expected recycler to be a built-in mod")
+	}
+	if !IsBuiltInMod("future-mod") {
+		t.Fatal("Expected future-mod to be detected as a bundled mod")
+	}
+	if IsBuiltInMod("some-mod") {
+		t.Fatal("Expected installed-only mod not to be a built-in mod")
+	}
+	if IsBuiltInMod("../future-mod") {
+		t.Fatal("Expected path traversal mod name not to be a built-in mod")
 	}
 }
 
@@ -107,6 +144,7 @@ func TestValidateEnabledDependenciesSkipsBuiltInMods(t *testing.T) {
 						"space-age",
 						"quality >= 2.0.0",
 						"elevated-rails >= 2.0.0",
+						"recycler >= 2.1.0",
 					},
 					Compatibility: true,
 				},
